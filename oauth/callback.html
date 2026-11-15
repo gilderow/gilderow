@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Returning to ReachForge</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main>
+    <h1>Returning to ReachForge…</h1>
+    <p id="msg">If nothing happens, make sure ReachForge is running on this computer, then start the connection
+      again from the ReachForge window.</p>
+  </main>
+  <script>
+    // OAuth relay for a local desktop app. Platforms that require an https redirect URI send
+    // the owner here; this page only forwards the query (code + state) to ReachForge on this
+    // same computer. Nothing is stored or sent anywhere else. The state value
+    // "<platform>~<random>" says which local callback to use and is checked by ReachForge.
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var platform = (params.get("state") || "").split("~")[0];
+      var allowed = { etsy: 1, instagram: 1, pinterest: 1 };
+      if (!allowed[platform]) {
+        document.getElementById("msg").textContent = "This link is not a ReachForge sign-in.";
+        return;
+      }
+      window.location.replace("http://127.0.0.1:8770/oauth/" + platform + "/callback" + window.location.search);
+    })();
+  </script>
+</body>
+</html>
